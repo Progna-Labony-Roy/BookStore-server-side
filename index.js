@@ -25,6 +25,7 @@ async function run() {
       .collection("categories");
 
     const bookCollection = client.db("resaleDatabase").collection("books");
+    const orderedBookCollection = client.db("resaleDatabase").collection("orderedBooks");
 
     app.get("/categories", async (req, res) => {
       const query = {};
@@ -32,6 +33,15 @@ async function run() {
 
       res.send(options);
     });
+
+    
+    // send ordered books on the server
+    app.post("/orderedBooks", async (req, res) => {
+      const booking = req.body;
+      const result = await orderedBookCollection.insertOne(booking);
+      res.send(result);
+    });
+
 
     // app.get("/categories/:id", async (req, res) => {
     //   const id = req.query.id;
@@ -42,13 +52,16 @@ async function run() {
     //   res.send(options);
     // });
 
-    app.get("/books", async (req, res) => {
-      const query = {};
-      const books = await bookCollection.find(query).toArray();
-      res.send(books);
-    });
 
-    app.get("/books/:id", async (req, res) => {
+    // app.get("/books", async (req, res) => {
+    //   const query = {};
+    //   const books = await bookCollection.find(query).toArray();
+    //   res.send(books);
+    // });
+
+
+    // category-wise book
+    app.get("/books", async (req, res) => {
       const id = req.query.id;
       const query = { category_name: id };
       const books = await bookCollection.find(query).toArray();
