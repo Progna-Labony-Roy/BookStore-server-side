@@ -26,6 +26,7 @@ async function run() {
 
     const bookCollection = client.db("resaleDatabase").collection("books");
     const orderedBookCollection = client.db("resaleDatabase").collection("orderedBooks");
+    const usersCollection = client.db("resaleDatabase").collection("users");
 
     app.get("/categories", async (req, res) => {
       const query = {};
@@ -51,7 +52,14 @@ async function run() {
     })
 
 
+// all users
 
+    app.post('/users', async(req,res) =>{
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result)
+    })
+    
 
     // app.get("/categories/:id", async (req, res) => {
     //   const id = req.query.id;
