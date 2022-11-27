@@ -37,10 +37,20 @@ async function run() {
     
     // send ordered books on the server
     app.post("/orderedBooks", async (req, res) => {
-      const booking = req.body;
-      const result = await orderedBookCollection.insertOne(booking);
+      const booked = req.body;     
+      const result = await orderedBookCollection.insertOne(booked);
       res.send(result);
     });
+
+    // load email wise orders
+    app.get('/orderedBooks', async (req,res) =>{
+      const email = req.query.email;
+      const query ={email :email};
+      const ordered= await orderedBookCollection.find(query).toArray();
+      res.send(ordered)
+    })
+
+
 
 
     // app.get("/categories/:id", async (req, res) => {
