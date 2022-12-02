@@ -101,13 +101,12 @@ async function run() {
     })
 
     // load email wise orders
-    app.get("/orderedBooks",  async (req, res) => {
+    app.get("/orderedBooks",verifyJWT,  async (req, res) => {
       const email = req.query.email;
-      // const decodedEmail = req.decoded.email;
-      // if (email != decodedEmail) {
-      //   return res.status(403).send({ message: "Access forbidden" });
-      // }
-
+      const decodedEmail = req.decoded.email;
+      if (email != decodedEmail) {
+        return res.status(403).send({ message: "Access forbidden" });
+      }
       const query = { email: email };
       const ordered = await orderedBookCollection.find(query).toArray();
       res.send(ordered);
@@ -254,9 +253,16 @@ async function run() {
       res.status(403).send({ accessToken: "" });
     });
 
+
     app.get("/books", async (req, res) => {
       const id = req.query.id;
       const query = { category_name: id };
+      const books = await bookCollection.find(query).toArray();
+      res.send(books);
+    });
+
+    app.get("/books", async (req, res) => {
+      const query = {  };
       const books = await bookCollection.find(query).toArray();
       res.send(books);
     });
